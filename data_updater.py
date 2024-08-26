@@ -78,7 +78,8 @@ app = FastAPI(lifespan=lifespan)
 
 # Define the origins that should be allowed
 origins = [
-    "http://localhost:4200",  # Angular app's URL
+    "https://app.wpgsoft.com",  # prod Angular app's URL
+    "http://localhost:4200",  # dev Angular app's URL
 ]
 
 app.add_middleware(
