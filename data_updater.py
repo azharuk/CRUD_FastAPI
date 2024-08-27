@@ -8,6 +8,9 @@ from bson import ObjectId
 import time
 import threading
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
+
 # MongoDB Connection
 client = MongoClient("mongodb://localhost:27017/")
 db = client["courses_db"]
@@ -80,6 +83,7 @@ app = FastAPI(lifespan=lifespan)
 origins = [
     "https://app.wpgsoft.com",  # prod Angular app's URL
     "http://localhost:4200",  # dev Angular app's URL
+    "http://localhost:8000",  # FastAPI static served Angular app's URL
 ]
 
 app.add_middleware(
@@ -90,11 +94,13 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all HTTP headers
 )
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+# Set the path to the static files
+app.mount("/static", StaticFiles(directory="dist/courses-app/browser"), name="static")
 
-#from fastapi import Query
+# Optional: Redirect root to the static index.html
+@app.get("/")
+async def read_index():
+    return RedirectResponse(url="/static/index.html")
 
 @app.get("/get_courses/")
 async def get_courses(search: str = "", page: int = 1, page_size: int = 10):
