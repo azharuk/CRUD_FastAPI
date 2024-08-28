@@ -94,6 +94,10 @@ app = FastAPI(lifespan=lifespan)
 #    allow_headers=["*"],  # Allows all HTTP headers
 #)
 
+@app.get("/")
+async def read_root():
+    return {"FastAPI": "API"}
+
 @app.get("/get_courses/")
 async def get_courses(search: str = "", page: int = 1, page_size: int = 10):
     query = {"$or": [
