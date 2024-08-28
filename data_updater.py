@@ -80,19 +80,19 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Define the origins that should be allowed
-#origins = [
-#    "https://app.wpgsoft.com",  # prod Angular app's URL
-#    "http://localhost:4200",  # dev Angular app's URL
-#    "http://localhost:8000",  # FastAPI static served Angular app's URL
-#]
+origins = [
+    "https://app.wpgsoft.com",  # prod Angular app's URL
+    "http://localhost:4200",  # dev Angular app's URL
+    "http://localhost:8000",  # FastAPI static served Angular app's URL
+]
 
-#app.add_middleware(
-#    CORSMiddleware,
-#    allow_origins=origins,  # Allows requests from specified origins
-#    allow_credentials=True,
-#    allow_methods=["*"],  # Allows all HTTP methods
-#    allow_headers=["*"],  # Allows all HTTP headers
-#)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allows requests from specified origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all HTTP headers
+)
 
 @app.get("/")
 async def read_root():
