@@ -94,11 +94,11 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all HTTP headers
 )
 
-@app.get("/")
+@app.get("/api/")
 async def read_root():
     return {"FastAPI": "API"}
 
-@app.get("/get_courses/")
+@app.get("/api/get_courses/")
 async def get_courses(search: str = "", page: int = 1, page_size: int = 10):
     query = {"$or": [
         {"University": {"$regex": search, "$options": "i"}},
@@ -116,20 +116,20 @@ async def get_courses(search: str = "", page: int = 1, page_size: int = 10):
 
     return {"total": total, "courses": courses}
 
-@app.post("/create_course/")
+@app.post("/api/create_course/")
 async def create_course(course: dict):
     course["inserted_at"] = datetime.utcnow()  # Add the inserted_at timestamp
     result = collection.insert_one(course)
     return {"id": str(result.inserted_id)}
 
-@app.put("/update_course/{course_id}")
+@app.put("/api/update_course/{course_id}")
 async def update_course(course_id: str, course: dict):
     result = collection.update_one({"_id": ObjectId(course_id)}, {"$set": course})
     if result.matched_count:
         return {"status": "success"}
     raise HTTPException(status_code=404, detail="Course not found")
 
-@app.delete("/delete_course/{course_id}")
+@app.delete("/api/delete_course/{course_id}")
 async def delete_course(course_id: str):
     result = collection.delete_one({"_id": ObjectId(course_id)})
     if result.deleted_count:
